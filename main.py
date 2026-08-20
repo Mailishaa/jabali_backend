@@ -10,6 +10,9 @@ from rejesha_green.routers.auth import router as auth_router
 from rejesha_green.security import hash_password
 from rejesha_green.config import settings
 
+from rejesha_green.models.user import User
+
+
 
 def onboard_default_admin():
     db: Session = SessionLocal()
@@ -17,7 +20,7 @@ def onboard_default_admin():
     try:
         admin = (
             db.query(User)
-            .filter(User.role == UserRole.SUPER_ADMIN)
+            .filter(User.email == settings.ADMIN_EMAIL)
             .first()
         )
 
@@ -40,7 +43,6 @@ def onboard_default_admin():
 
     finally:
         db.close()
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

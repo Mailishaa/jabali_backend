@@ -36,3 +36,4 @@ logs/
 # Alembic
 alembic/
 alembic.ini
+keys/

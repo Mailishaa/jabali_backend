@@ -2,6 +2,44 @@ from sqlalchemy import Column, String, Boolean, Float
 from database import Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
+import enum
+
+class ForestBlocks(str, enum.Enum):
+    MAJI_MAZURI = "Maji Mazuri"
+    CHEMOROGOK = "Chemorogok"
+    EASTERN_MAU = "Eastern Mau"
+    EBURU = "Eburu"
+    KILOMBE_HILL = "Kilombe Hill"
+    LEMBUS = "Lembus"
+    LONDIANI = "Londiani"
+    WESTERN_MAU = "Western Mau"
+    MAASAI_MAU = "Maasai Mau"
+    MAU_NAROK = "Mau Narok"
+    MOLO = "Molo"
+    NORTHERN_TINDERET = "Northern Tinderet"
+    OLPOSIMORU = "Olposimoru"
+    METKEI = "Metkei"
+    SOUTH_WEST_MAU = "South West Mau"
+    SOUTH_MAU = "South Mau"
+    TINDERET = "Tinderet"
+    TRANSMARA = "Transmara"
+    WEST_MOLO = "West Molo"
+    TIMBOROA = "Timboroa"
+    WEST_MAU = "West Mau"
+    NABKOI = "Nabkoi"
+    
+
+class ResourceTypes(str, enum.Enum):
+    FIREWOOD = "Firewood"
+    GRASS = "Grass"
+    BAMBOO = "Bamboo"
+    HONEY = "Honey"
+    MEDICINAL_PLANTS = "Medicinal plants"
+    GRAZING = "Grazing"
+    FODDER = "Fodder"
+    FARMING = "Farming"
+    SEEDLINGS = "Seedlings"
+    POLES = "Poles"
 
 
 class ForestZone(Base):
@@ -13,3 +51,4 @@ class ForestZone(Base):
     resource_type = Column(String(100),nullable=False)
     is_available = Column(Boolean,default=True,nullable=False)
     price = Column(Float,nullable=False)
+    

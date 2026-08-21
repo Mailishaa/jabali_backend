@@ -66,18 +66,18 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
 
 
-class RegistrationPayment(Base):
+# class RegistrationPayment(Base):
 
-    __tablename__ = "registration_payments"
+#     __tablename__ = "registration_payments"
 
-    payment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    member_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
-    cfa_id = Column(UUID(as_uuid=True), ForeignKey("cfas.cfa_id"), nullable=False, index=True)
-    amount = Column(Numeric(10, 2), nullable=False)
-    phone = Column(String(20), nullable=False)
-    checkout_request_id = Column(String(100), unique=True, nullable=True, index=True)
-    merchant_request_id = Column(String(100), nullable=True)
-    mpesa_receipt = Column(String(100), nullable=True)
-    status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-    paid_at = Column(DateTime, nullable=True)
+#     payment_id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+#     member_id = Column(UUID(as_uuid=True), ForeignKey("users.user_id"), nullable=False, index=True)
+#     cfa_id = Column(UUID(as_uuid=True), ForeignKey("cfas.cfa_id"), nullable=False, index=True)
+#     amount = Column(Numeric(10, 2), nullable=False)
+#     phone = Column(String(20), nullable=False)
+#     checkout_request_id = Column(String(100), unique=True, nullable=True, index=True)
+#     merchant_request_id = Column(String(100), nullable=True)
+#     mpesa_receipt = Column(String(100), nullable=True)
+#     status = Column(Enum(PaymentStatus), default=PaymentStatus.PENDING, nullable=False)
+#     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+#     paid_at = Column(DateTime, nullable=True)

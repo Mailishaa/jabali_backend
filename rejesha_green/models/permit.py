@@ -18,4 +18,4 @@ class Permit(Base):
    issued_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
-   payments = relationship("Payment", back_populates="permit")
+   #payments = relationship("Payment", back_populates="permit")

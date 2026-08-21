@@ -15,7 +15,6 @@ from database import Base
 
 class Permit(Base):
     __tablename__ = "permits"
-
     permit_id = Column(Integer,primary_key=True,index=True,)
     member_id = Column(UUID(as_uuid=True),ForeignKey("users.user_id"),nullable=False,index=True,)
     requested_resources = Column(String(200),nullable=False,)

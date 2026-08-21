@@ -15,10 +15,7 @@ from database import get_db
 from rejesha_green.services.ussd_service import handle_ussd
 
 
-router = APIRouter(
-    prefix="/ussd",
-    tags=["USSD"]
-)
+router = APIRouter(prefix="/ussd",tags=["USSD"])
 
 ussd_rate_limit_store = {}
 
@@ -58,7 +55,7 @@ def check_ussd_rate_limit(
 
 
 @router.post("")
-def handle_ussd_report(
+async def handle_ussd_report(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
     text: str = Form(""),

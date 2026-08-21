@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-
+from fastapi.responses import PlainTextResponse
 from rejesha_green.models.incident import ActivityType
 from rejesha_green.models.forest_zone import ForestZone
 from rejesha_green.schemas.incidents import IncidentReportCreate
@@ -13,7 +13,7 @@ def handle_ussd(
     text_segments = text.split("*") if text else []
 
     if len(text_segments) == 0:
-        return (
+        return PlainTextResponse(
             "CON Welcome to Rejesha Green.\n"
             "1. Report Incident\n"
             "2. Access Resources"
@@ -21,7 +21,7 @@ def handle_ussd(
 
     if len(text_segments) == 1:
         if text_segments[0] == "1":
-            return (
+            return PlainTextResponse(
                 "CON Select Incident Type:\n"
                 "1. Charcoal Burning\n"
                 "2. Logging\n"
@@ -34,21 +34,22 @@ def handle_ussd(
 
         return "END Invalid selection."
 
-    type_mapping = {
-        "1": ActivityType.CHARCOAL_BURNING,
-        "2": ActivityType.LOGGING,
-        "3": ActivityType.POACHING,
-        "4": ActivityType.OTHERS,
-    }
+    incident_types = {
+    "1": ActivityType.Charcoal_Burning,
+    "2": ActivityType.Logging,
+    "3": ActivityType.Poaching,
+    "4": ActivityType.Others,
+}
 
     if len(text_segments) == 2:
         if text_segments[0] != "1":
             return "END Invalid menu path."
 
-        selected_type = type_mapping.get(text_segments[1])
+        selected_type = incident_types.get(text_segments[1])
 
         if selected_type is None:
             return "END Invalid incident type."
+            
 
         zones = (
             db.query(ForestZone)
@@ -74,7 +75,7 @@ def handle_ussd(
         if text_segments[0] != "1":
             return "END Invalid menu path."
 
-        selected_type = type_mapping.get(text_segments[1])
+        selected_type = incident_types.get(text_segments[1])
 
         if selected_type is None:
             return "END Invalid incident type."

@@ -2,6 +2,8 @@ from fastapi import FastAPI
 
 from database import Base, engine
 
+from rejesha_green.routers import forest_zone as forest_zone_routers
+
 from rejesha_green.models.user import User, CFA, RegistrationPayment
 from rejesha_green.models.incident import IncidentReport
 from rejesha_green.models.permit import Permit
@@ -10,10 +12,12 @@ from rejesha_green.models.reforestation_log import TreeSurvivalLog
 from rejesha_green.models.activity import Activity
 
 
+
 app = FastAPI(
     title="REJESHA API",
     version="1.0.0"
 )
+app.include_router(forest_zone_routers.router)
 
 
 Base.metadata.create_all(bind=engine)

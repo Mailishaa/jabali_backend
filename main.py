@@ -42,11 +42,15 @@ def onboard_default_admin():
         db.close()
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    Base.metadata.create_all(bind=engine)
-    onboard_default_admin()
-    yield
+from rejesha_green.routers import forest_zone as forest_zone_routers
+
+from rejesha_green.models.user import User, CFA, RegistrationPayment
+from rejesha_green.models.incident import IncidentReport
+from rejesha_green.models.permit import Permit
+from rejesha_green.models.forest_zone import ForestZone
+from rejesha_green.models.reforestation_log import TreeSurvivalLog
+from rejesha_green.models.activity import Activity
+
 
 
 app = FastAPI(
@@ -54,6 +58,7 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+app.include_router(forest_zone_routers.router)
 
 
 app.include_router(auth_router)

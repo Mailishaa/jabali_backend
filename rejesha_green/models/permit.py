@@ -17,5 +17,3 @@ class Permit(Base):
    max_permit = Column(Integer, nullable=False)
    issued_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
-
-   payments = relationship("Payment", back_populates="permit")

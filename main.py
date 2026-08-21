@@ -9,6 +9,9 @@ from rejesha_green.models.forest_zone import ForestZone
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
 from rejesha_green.models.activity import Activity
 
+from rejesha_green.routers.activities import router as activities_router
+
+
 
 app = FastAPI(
     title="REJESHA API",
@@ -17,6 +20,9 @@ app = FastAPI(
 
 
 Base.metadata.create_all(bind=engine)
+
+
+app.include_router(activities_router)
 
 
 @app.get("/")

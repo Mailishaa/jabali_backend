@@ -1,6 +1,6 @@
 from database import Base
 from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, func
-from sqlalchemy.orm import relationship
+#from sqlalchemy.orm import relationship
 
 
 class Permit(Base):
@@ -18,4 +18,4 @@ class Permit(Base):
    issued_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
 
 
-   payments = relationship("Payment", back_populates="permit")
+# payments = relationship("Payment", back_populates="permit")

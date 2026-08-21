@@ -2,6 +2,8 @@ from pydantic import BaseModel, field_validator
 from uuid import UUID
 from typing import Optional
 from rejesha_green.models.forest_zone import ForestBlocks, ResourceTypes
+from decimal import Decimal
+
 
 
 class ForestZoneCreate(BaseModel):
@@ -9,7 +11,7 @@ class ForestZoneCreate(BaseModel):
     block_name: str
     resource_type: str
     is_available: bool = True
-    price: float
+    resource_price: Decimal
 
     @field_validator("block_name")
     @classmethod
@@ -31,7 +33,7 @@ class ForestZoneUpdate(BaseModel):
     block_name: Optional[str] = None
     resource_type: Optional[str] = None
     is_available: Optional[bool] = None
-    price: Optional[float] = None
+    resource_price: Optional[Decimal] = None
 
     @field_validator("block_name")
     @classmethod
@@ -62,7 +64,7 @@ class ForestZoneResponse(BaseModel):
     block_name: str
     resource_type: str
     is_available: bool
-    price: float
+    resource_price: Decimal
 
     class Config:
         from_attributes = True
@@ -72,4 +74,4 @@ class ResourceUpdate(BaseModel):
     block_name: str
     resource_type: str
     is_available: bool
-    price: float
+    resource_price: Decimal

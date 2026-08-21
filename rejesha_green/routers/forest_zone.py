@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from uuid import UUID
+from database import get_db
 
 from database import SessionLocal
 from rejesha_green.schemas.forest_zone import (
@@ -17,13 +18,6 @@ router = APIRouter(
 )
 
 
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 @router.post("/", response_model=ForestZoneResponse)

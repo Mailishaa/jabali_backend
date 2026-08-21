@@ -54,7 +54,7 @@ def update_resource_availability(
     block_name,
     resource_type,
     is_available,
-    price
+    resource_price
 ):
     if block_name not in [block.value for block in ForestBlocks]:
         return None
@@ -67,5 +67,5 @@ def update_resource_availability(
         block_name,
         resource_type,
         is_available,
-        price
+        resource_price
     )

@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Boolean, Float
+from sqlalchemy import Column, String, Boolean, Numeric
 from database import Base
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
@@ -50,5 +50,5 @@ class ForestZone(Base):
     block_name = Column(String(100), nullable=False)
     resource_type = Column(String(100),nullable=False)
     is_available = Column(Boolean,default=True,nullable=False)
-    price = Column(Float,nullable=False)
+    resource_price = Column(Numeric(10,2),nullable=False)
     

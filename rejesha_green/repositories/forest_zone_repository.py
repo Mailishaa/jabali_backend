@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from rejesha_green .models.forest_zone import ForestZone
+from decimal import Decimal
 
 
 def create_forest_zone(db: Session, zone):
@@ -37,8 +38,8 @@ def update_forest_zone(db: Session, zone_id, zone):
         if zone.is_available is not None:
             db_zone.is_available = zone.is_available
 
-        if zone.price is not None:
-            db_zone.price = zone.price
+        if zone.resource_price is not None:
+            db_zone.resource_price = zone.resource_price
 
         db.commit()
         db.refresh(db_zone)
@@ -74,7 +75,7 @@ def update_resource_availability(
     block_name: str,
     resource_type: str,
     is_available: bool,
-    price: float
+    resource_price: Decimal
 ):
     resource = db.query(ForestZone).filter(
         ForestZone.block_name == block_name,
@@ -83,7 +84,7 @@ def update_resource_availability(
 
     if resource:
         resource.is_available = is_available
-        resource.price = price
+        resource.resource_price = resource_price
 
         db.commit()
         db.refresh(resource)

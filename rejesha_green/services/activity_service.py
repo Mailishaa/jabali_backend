@@ -48,15 +48,6 @@ class ActivityService:
             f"Please prepare to participate. Thank you."
         )
 
-        # TEMPORARY TEST NUMBER
-        test_phone_number = "+254702954450"
-
-        # Send SMS
-        self.sms_service.send_sms(
-            phone_number=test_phone_number,
-            message=message,
-        )
-
         return created_activity
 
     def get_activity(

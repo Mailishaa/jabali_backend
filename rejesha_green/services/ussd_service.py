@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi.responses import PlainTextResponse
+
 from rejesha_green.models.incident import ActivityType
 from rejesha_green.models.forest_zone import ForestZone
 from rejesha_green.schemas.incidents import IncidentReportCreate
@@ -20,6 +21,7 @@ def handle_ussd(
         )
 
     if len(text_segments) == 1:
+
         if text_segments[0] == "1":
             return PlainTextResponse(
                 "CON Select Incident Type:\n"
@@ -30,26 +32,32 @@ def handle_ussd(
             )
 
         if text_segments[0] == "2":
-            return "END Resources are currently unavailable."
+            return PlainTextResponse(
+                "END Resources are currently unavailable."
+            )
 
-        return "END Invalid selection."
+        return PlainTextResponse(
+            "END Invalid selection."
+        )
+
 
     incident_types = {
-    "1": ActivityType.Charcoal_Burning,
-    "2": ActivityType.Logging,
-    "3": ActivityType.Poaching,
-    "4": ActivityType.Others,
-}
+        "1": ActivityType.Charcoal_Burning,
+        "2": ActivityType.Logging,
+        "3": ActivityType.Poaching,
+        "4": ActivityType.Others,
+    }
+
 
     if len(text_segments) == 2:
-        if text_segments[0] != "1":
-            return "END Invalid menu path."
 
         selected_type = incident_types.get(text_segments[1])
 
         if selected_type is None:
-            return "END Invalid incident type."
-            
+            return PlainTextResponse(
+                "END Invalid incident type."
+            )
+
 
         zones = (
             db.query(ForestZone)
@@ -58,10 +66,15 @@ def handle_ussd(
             .all()
         )
 
+
         if not zones:
-            return "END No operational forest zones found."
+            return PlainTextResponse(
+                "END No forest zones available."
+            )
+
 
         response = "CON Select Forest Zone:\n"
+
 
         for index, zone in enumerate(zones, start=1):
             response += (
@@ -69,16 +82,22 @@ def handle_ussd(
                 f"{zone.cfa_name} - {zone.block_name}\n"
             )
 
-        return response.rstrip()
+
+        return PlainTextResponse(
+            response.rstrip()
+        )
+
+
 
     if len(text_segments) == 3:
-        if text_segments[0] != "1":
-            return "END Invalid menu path."
 
         selected_type = incident_types.get(text_segments[1])
 
         if selected_type is None:
-            return "END Invalid incident type."
+            return PlainTextResponse(
+                "END Invalid incident type."
+            )
+
 
         zones = (
             db.query(ForestZone)
@@ -87,29 +106,42 @@ def handle_ussd(
             .all()
         )
 
-        if not zones:
-            return "END No operational forest zones found."
 
         try:
             zone_index = int(text_segments[2]) - 1
+
         except ValueError:
-            return "END Invalid zone selection."
+            return PlainTextResponse(
+                "END Invalid zone selection."
+            )
+
 
         if zone_index < 0 or zone_index >= len(zones):
-            return "END Invalid zone selection."
+            return PlainTextResponse(
+                "END Invalid zone selection."
+            )
+
 
         selected_zone = zones[zone_index]
 
+
         report_data = IncidentReportCreate(
             zone_id=selected_zone.zone_id,
-            incident_type=selected_type,
+            incident_type=selected_type
         )
+
 
         create_incident_report(
             db,
             report_data
         )
 
-        return "END Incident submitted successfully!"
 
-    return "END Invalid USSD request."
+        return PlainTextResponse(
+            "END Incident submitted successfully!"
+        )
+
+
+    return PlainTextResponse(
+        "END Invalid USSD request."
+    )

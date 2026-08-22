@@ -10,6 +10,7 @@ from rejesha_green.models.reforestation_log import TreeSurvivalLog
 from rejesha_green.models.activity import Activity
 from rejesha_green.routers import incidents
 from rejesha_green.routers.ussd import router as ussd_router
+from rejesha_green.routers import reforestation_logs
 
 app = FastAPI(
     title="REJESHA API",
@@ -18,7 +19,7 @@ app = FastAPI(
 
 
 Base.metadata.create_all(bind=engine)
-
+app.include_router(reforestation_logs.router)
 app.include_router(incidents.router)
 app.include_router(ussd_router)
 @app.get("/")

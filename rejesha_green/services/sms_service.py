@@ -1,6 +1,6 @@
- forest_activities
+# forest_activities
 import logging
- dev
+# dev
 import requests
 
 from rejesha_green.config import settings

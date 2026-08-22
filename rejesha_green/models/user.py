@@ -48,4 +48,4 @@ class User(Base):
     payments = relationship("RegistrationPayment", foreign_keys="RegistrationPayment.member_id", back_populates="member")
     registered_by_user = relationship("User", remote_side=[user_id], foreign_keys=[registered_by], back_populates="registered_users")
     registered_users = relationship("User", foreign_keys=[registered_by], back_populates="registered_by_user")
-    managed_community_forest_associations = relationship("CommunityForestAssociation", foreign_keys="CommunityForestAssociation.kenya_forest_service_official_id", back_populates="kenya_forest_service_official")ure/permit
+    managed_community_forest_associations = relationship("CommunityForestAssociation", foreign_keys="CommunityForestAssociation.kenya_forest_service_official_id", back_populates="kenya_forest_service_official")

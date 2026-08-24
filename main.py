@@ -17,11 +17,9 @@ from rejesha_green.security import hash_password
 
 from rejesha_green.routers import forest_zone as forest_zone_routers
 
-#from rejesha_green.models.user import User, CFA, RegistrationPayment
 from rejesha_green.models.incident import IncidentReport
 from rejesha_green.models.permit import Permit
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
-#from rejesha_green.models.user import CFA, RegistrationPayment, User
 from rejesha_green.routers import permits
 
 from database import Base, engine
@@ -65,6 +63,13 @@ async def lifespan(app: FastAPI):
     onboard_default_admin()
     yield
 
+from rejesha_green.routers import forest_zone as forest_zone_routers
+
+from rejesha_green.models.incident import IncidentReport
+from rejesha_green.models.permit import Permit
+from rejesha_green.models.reforestation_log import TreeSurvivalLog
+from rejesha_green.models.user import CFA, RegistrationPayment, User
+from rejesha_green.routers import permits
 
 
 app = FastAPI(
@@ -90,6 +95,7 @@ app.include_router(activities_router)
 
 
 @app.get("/")
+
 def root():
     return {
         "application": "JABALI",

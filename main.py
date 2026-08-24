@@ -48,7 +48,7 @@ from rejesha_green.models.forest_zone import ForestZone
 
 from rejesha_green.routers import forest_zone as forest_zone_routers
 
-from rejesha_green.models.user import User, CFA, RegistrationPayment
+#from rejesha_green.models.user import User, CFA, RegistrationPayment
 from rejesha_green.models.incident import IncidentReport
 from rejesha_green.models.permit import Permit
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
@@ -76,6 +76,7 @@ app.include_router(payment_router)
 
 
 @app.get("/")
+
 def root():
     return {
         "application": "JABALI",

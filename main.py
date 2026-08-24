@@ -68,6 +68,9 @@ from rejesha_green.routers import forest_zone as forest_zone_routers
 from rejesha_green.models.incident import IncidentReport
 from rejesha_green.models.permit import Permit
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
+from rejesha_green.models.activity import Activity
+from rejesha_green.routers import incidents
+from rejesha_green.routers.ussd import router as ussd_router
 from rejesha_green.models.user import CFA, RegistrationPayment, User
 from rejesha_green.routers import permits
 
@@ -94,6 +97,8 @@ app.include_router(payment_router)
 app.include_router(activities_router)
 
 
+app.include_router(incidents.router)
+app.include_router(ussd_router)
 @app.get("/")
 
 def root():

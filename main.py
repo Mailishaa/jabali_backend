@@ -15,6 +15,20 @@ from rejesha_green.routers.registration_payments import router as payment_router
 from rejesha_green.security import hash_password
 
 
+from rejesha_green.routers import forest_zone as forest_zone_routers
+
+from rejesha_green.models.incident import IncidentReport
+from rejesha_green.models.permit import Permit
+from rejesha_green.models.reforestation_log import TreeSurvivalLog
+from rejesha_green.routers import permits
+
+from database import Base, engine
+from rejesha_green.models.activity import Activity
+from rejesha_green.models.forest_zone import ForestZone
+
+from rejesha_green.routers.activities import router as activities_router
+
+
 def onboard_default_admin():
     db: Session = SessionLocal()
 
@@ -25,9 +39,8 @@ def onboard_default_admin():
             return
 
 
-from database import Base, engine
-from rejesha_green.models.activity import Activity
-from rejesha_green.models.forest_zone import ForestZone
+
+
         admin = User(
             national_id="SYSTEM-ADMIN",
             first_name=settings.ADMIN_FIRST_NAME,
@@ -45,10 +58,13 @@ from rejesha_green.models.forest_zone import ForestZone
     finally:
         db.close()
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    onboard_default_admin()
+    yield
 
 from rejesha_green.routers import forest_zone as forest_zone_routers
 
-#from rejesha_green.models.user import User, CFA, RegistrationPayment
 from rejesha_green.models.incident import IncidentReport
 from rejesha_green.models.permit import Permit
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
@@ -75,6 +91,10 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(cfa_router)
 app.include_router(payment_router)
+
+
+
+app.include_router(activities_router)
 
 
 app.include_router(incidents.router)

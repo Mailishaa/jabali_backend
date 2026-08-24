@@ -11,6 +11,8 @@ from sqlalchemy import (
 from sqlalchemy.dialects.postgresql import UUID
 
 from database import Base
+from sqlalchemy import Boolean, Column, DateTime, Integer, Numeric, String, func
+#from sqlalchemy.orm import relationship
 
 
 class Permit(Base):
@@ -34,6 +36,7 @@ class Permit(Base):
     payment_completed_at = Column(DateTime(timezone=True),nullable=True,)
     ussd_session_id = Column(String(100),unique=True,nullable=False,index=True,)
 
+# payments = relationship("Payment", back_populates="permit")
     current_step = Column(String(50),nullable=False,default="start",)
     session_data = Column(String(2000),nullable=True,)
     session_created_at = Column( DateTime(timezone=True), server_default=func.now(),nullable=False,)

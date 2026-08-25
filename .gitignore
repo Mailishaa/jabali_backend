@@ -37,4 +37,4 @@ logs/
 alembic/
 alembic.ini
 keys/env/
-__pycache__/
+__pycache_

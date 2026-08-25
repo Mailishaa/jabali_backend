@@ -36,4 +36,6 @@ logs/
 # Alembic
 alembic/
 alembic.ini
+keys/env/
+__pycache_ 
 keys/

@@ -14,6 +14,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 
+
 from database import Base
 
 
@@ -52,11 +53,16 @@ class Activity(Base):
         String(36),
         primary_key=True,
         default=lambda: str(uuid.uuid4()),
-    )
+    )   
+       
+
     created_by = Column(
-        String(36),
-        ForeignKey("users.user_id"),
-        nullable=False)
+    UUID(as_uuid=True),
+    ForeignKey("users.user_id"),
+    nullable=False,
+    )
+
+    
     
     zone_id = Column(
         UUID(as_uuid=True),

@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
 
-    JWT_PRIVATE_KEY_PATH: str
-    JWT_PUBLIC_KEY_PATH: str
+    JWT_PRIVATE_KEY: str
+    JWT_PUBLIC_KEY: str
 
 
     DARAJA_CONSUMER_KEY: str

@@ -22,7 +22,7 @@ from rejesha_green.models.permit import Permit
 from rejesha_green.models.reforestation_log import TreeSurvivalLog
 from rejesha_green.routers import permits
 
-from database import Base, engine
+from rejesha_green.routers.reforestation_logs import router as reforestation_logs
 from rejesha_green.models.activity import Activity
 from rejesha_green.models.forest_zone import ForestZone
 
@@ -71,8 +71,7 @@ from rejesha_green.models.reforestation_log import TreeSurvivalLog
 from rejesha_green.models.activity import Activity
 from rejesha_green.routers import incidents
 from rejesha_green.routers.ussd import router as ussd_router
-from rejesha_green.models.user import CFA, RegistrationPayment, User
-from rejesha_green.routers import permits
+
 
 
 app = FastAPI(
@@ -91,6 +90,7 @@ app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(cfa_router)
 app.include_router(payment_router)
+app.include_router(reforestation_logs)
 
 
 

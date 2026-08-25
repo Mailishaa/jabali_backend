@@ -55,8 +55,8 @@ class PermitService:
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Only registered members can request permits.",
             )
-
-        if member.cfa_id is None:
+        if member.community_forest_association_id is None:
+        
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Member is not assigned to a CFA.",

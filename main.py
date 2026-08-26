@@ -31,9 +31,10 @@ from rejesha_green.security import hash_password
 
 def onboard_default_admin():
     db: Session = SessionLocal()
-
     try:
-        admin = db.query(User).filter(User.email == settings.ADMIN_EMAIL).first()
+        admin = db.query(User).filter( User.national_id=="SYSTEM-ADMIN"
+        ).first()
+        
 
         if admin:
             return

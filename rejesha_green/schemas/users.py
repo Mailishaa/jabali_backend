@@ -17,6 +17,7 @@ class MemberCreate(UserBase):
     email: EmailStr | None = None
     user_group: UserGroup | None = None
     block_name: str | None = None
+    email: EmailStr | None = None
 
 class UserCreate(UserBase):
     email: EmailStr | None = None

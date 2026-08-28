@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     ADMIN_PHONE: str
     ADMIN_PASSWORD: str
 
+    USSD_API_KEY: str
+    AT_SHORTCODE:str
+
 
     model_config = SettingsConfigDict(
         env_file=".env",

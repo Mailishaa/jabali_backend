@@ -10,6 +10,8 @@ bearer_scheme=HTTPBearer()
 
 PRIVATE_KEY=os.getenv("JWT_PRIVATE_KEY")
 PUBLIC_KEY=os.getenv("JWT_PUBLIC_KEY")
+PRIVATE_KEY = (settings.JWT_PRIVATE_KEY)
+PUBLIC_KEY = (settings.JWT_PUBLIC_KEY)
 
 def hash_password(password:str): return bcrypt.hashpw(password.encode("utf-8"),bcrypt.gensalt()).decode("utf-8")
 

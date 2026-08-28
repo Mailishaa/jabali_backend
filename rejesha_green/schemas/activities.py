@@ -11,7 +11,7 @@ class ActivityCreate(BaseModel):
     created_by: str
     zone_id: UUID
     activity_name: str = Field(..., max_length=100)
-    scheduled_date: date
+    scheduled_date: datetime
     description: Optional[str] = None
     user_group: Optional[UserGroup] = None
     expected_attendees: int = Field(..., ge=0)

@@ -50,5 +50,6 @@ class ForestZone(Base):
     block_name = Column(String(100), nullable=False)
     resource_type = Column(String(100),nullable=False)
     is_available = Column(Boolean,default=True,nullable=False)
-    resource_price = Column(Numeric(10,2),nullable=False)
+    # resource_price = Column(Numeric(10,2),nullable=False)
+    resource_price = Column("price", Numeric(10, 2), nullable=False)
     

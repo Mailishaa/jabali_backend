@@ -7,8 +7,8 @@ class Settings(BaseSettings):
     DATABASE_URL: str
 
 
-    JWT_PRIVATE_KEY_PATH: str
-    JWT_PUBLIC_KEY_PATH: str
+    JWT_PRIVATE_KEY: str
+    JWT_PUBLIC_KEY: str
 
 
     DARAJA_CONSUMER_KEY: str
@@ -36,6 +36,9 @@ class Settings(BaseSettings):
     ADMIN_EMAIL: str
     ADMIN_PHONE: str
     ADMIN_PASSWORD: str
+
+    USSD_API_KEY: str
+    AT_SHORTCODE:str
 
 
     model_config = SettingsConfigDict(

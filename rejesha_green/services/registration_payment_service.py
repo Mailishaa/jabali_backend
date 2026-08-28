@@ -8,7 +8,7 @@ from rejesha_green.repositories.user_repository import UserRepository
 from rejesha_green.repositories.community_forest_association_repository import CommunityForestAssociationRepository
 from rejesha_green.repositories.registration_payment_repository import RegistrationPaymentRepository
 from rejesha_green.services.daraja_service import stk_push
-from rejesha_green.services.sms_service import send_sms
+from rejesha_green.services.sms_service import SMSService
 from rejesha_green.services.user_service import generate_member_number
 
 def initiate_registration_payment(db: Session, member_id: uuid.UUID, current_user):

@@ -1,6 +1,6 @@
 import enum
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     Column,
@@ -11,6 +11,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+    
 )
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -75,7 +76,7 @@ class Activity(Base):
 
 
     scheduled_date = Column(
-        Date,
+        DateTime(timezone=True),
         nullable=False)
 
 

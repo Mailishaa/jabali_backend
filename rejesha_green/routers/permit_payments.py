@@ -11,6 +11,16 @@ router = APIRouter(
 )
 
 
+@router.post("/callback")
+def payment_callback(
+    payload:dict,
+    db:Session=Depends(get_db),
+):
+    return permit_payment_service.process_permit_payment(
+        db,
+        payload,
+    )
+
 @router.post("/{permit_id}")
 def initiate_payment(
     permit_id:int,
@@ -21,13 +31,3 @@ def initiate_payment(
         permit_id,
     )
 
-
-@router.post("/callback")
-def payment_callback(
-    payload:dict,
-    db:Session=Depends(get_db),
-):
-    return permit_payment_service.process_permit_payment(
-        db,
-        payload,
-    )

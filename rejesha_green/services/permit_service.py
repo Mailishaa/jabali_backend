@@ -34,23 +34,35 @@ class PermitService:
         phone_number: str,
     ) -> User:
 
-        member = (
-            db.query(User)
-            .filter(User.user_id == member_id)
-            .first()
-        )
+        print("USSD PHONE RECEIVED:", phone_number)
 
+    # Normalize Africa's Talking format
+        if phone_number.startswith("254"):
+            phone_number = "0" + phone_number[3:]
+
+        print("NORMALIZED PHONE:", phone_number)
+
+        members = db.query(User).all()
+
+        for m in members:
+            print("DB MEMBER:", m.phone, m.role)
+
+        member = (
+        db.query(User)
+        .filter(User.phone == phone_number)
+        .first()
+    )
         if not member:
             raise HTTPException(
                 status_code=404,
                 detail="Member not found.",
-            )
-
-        if member.phone != phone_number:
+        )
+        if member.user_id != member_id:
             raise HTTPException(
                 status_code=403,
                 detail="Member ID and phone number do not match.",
             )
+
 
         if not member.is_active:
             raise HTTPException(

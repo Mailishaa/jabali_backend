@@ -12,10 +12,14 @@ from sqlalchemy.orm import Session
 
 from database import get_db
 
-from rejesha_green.services.ussd_service import handle_ussd
+from rejesha_green.services.permit_service import permit_service
 
 
-router = APIRouter(prefix="/ussd",tags=["USSD"])
+router = APIRouter(
+    prefix="/ussd",
+    tags=["USSD"]
+)
+
 
 ussd_rate_limit_store = {}
 
@@ -23,46 +27,49 @@ LIMIT_WINDOW_SECONDS = 60
 MAX_REQUESTS_PER_WINDOW = 10
 
 
+
 def check_ussd_rate_limit(
     phoneNumber: str = Form(...)
 ):
-    current_time = time.time()
 
-    if phoneNumber not in ussd_rate_limit_store:
-        ussd_rate_limit_store[phoneNumber] = []
+    now = time.time()
 
-    timestamps = ussd_rate_limit_store[phoneNumber]
+    timestamps = ussd_rate_limit_store.setdefault(
+        phoneNumber,
+        []
+    )
 
-    valid_timestamps = [
-        timestamp
-        for timestamp in timestamps
-        if timestamp > current_time - LIMIT_WINDOW_SECONDS
+    timestamps = [
+        t for t in timestamps
+        if t > now - LIMIT_WINDOW_SECONDS
     ]
 
-    if len(valid_timestamps) >= MAX_REQUESTS_PER_WINDOW:
-        ussd_rate_limit_store[phoneNumber] = valid_timestamps
-
+    if len(timestamps) >= MAX_REQUESTS_PER_WINDOW:
         raise HTTPException(
             status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            detail="Too many requests. Please try again later."
+            detail="Too many requests. Try again later."
         )
 
-    valid_timestamps.append(current_time)
+    timestamps.append(now)
 
-    ussd_rate_limit_store[phoneNumber] = valid_timestamps
+    ussd_rate_limit_store[phoneNumber] = timestamps
 
     return phoneNumber
 
 
+
 @router.post("")
-async def handle_ussd_report(
+async def handle_ussd_request(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
     text: str = Form(""),
     phoneNumber: str = Depends(check_ussd_rate_limit),
     db: Session = Depends(get_db),
 ):
-    return handle_ussd(
+
+    return permit_service.handle_ussd_request(
         db=db,
-        text=text
+        session_id=sessionId,
+        phone_number=phoneNumber,
+        text=text,
     )

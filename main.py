@@ -26,8 +26,10 @@ from rejesha_green.routers.reforestation_logs import router as reforestation_log
 from rejesha_green.routers.activities import router as activities_router
 from rejesha_green.routers import incidents
 from rejesha_green.routers.ussd import router as ussd_router
+from rejesha_green.routers import permit_payments
 
 from rejesha_green.security import hash_password
+
 
 
 def onboard_default_admin():
@@ -83,7 +85,7 @@ app.include_router(forest_zone_routers.router)
 Base.metadata.create_all(bind=engine)
 
 app.include_router(permits.router)
-
+app.include_router(permit_payments.router)
 app.include_router(auth_router)
 app.include_router(users_router)
 app.include_router(cfa_router)

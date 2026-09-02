@@ -62,7 +62,7 @@ def onboard_default_admin():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    onboard_default_admin()
+    #onboard_default_admin()
     yield
 
 

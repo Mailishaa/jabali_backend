@@ -53,7 +53,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-settings.JWT_PRIVATE_KEY = Path(settings.JWT_PRIVATE_KEY).read_text()
-settings.JWT_PUBLIC_KEY = Path(settings.JWT_PUBLIC_KEY).read_text()
+
 
 

@@ -1,3 +1,4 @@
+
 import logging
 from datetime import datetime, timezone
 from uuid import UUID
@@ -288,6 +289,9 @@ class PermitService:
         text:str,
     ) -> str:
 
+        if phone_number.startswith("254"):
+            phone_number = "0" + phone_number[3:]
+
 
         member = (
             db.query(User)
@@ -315,16 +319,6 @@ class PermitService:
 
 
         parts = text.split("*") if text else []
-
-
-
-        if not parts:
-
-            return (
-                "CON Welcome to Rejesha Green\n"
-                "1. Request permit"
-            )
-
 
 
         resources = (
@@ -370,18 +364,16 @@ class PermitService:
 
 
         # STEP 2
-        if parts[0]=="1" and len(parts)==2:
-
+        if len(parts) == 1:
 
             try:
-
                 selected = resources[
-                    int(parts[1])-1
+                    int(parts[0]) - 1
                 ]
 
-            except:
-
+            except (ValueError, IndexError):
                 return "END Invalid resource."
+
 
 
 

@@ -31,6 +31,8 @@ def handle_ussd(
 
     # ADDED: Permit flow entry point
     if text_segments[0] == "1":
+        permit_text = "*".join(text_segments[1:])
+
 
         response = permit_service.handle_ussd_request(
             db=db,
@@ -54,8 +56,8 @@ def handle_ussd(
 
 
         return handle_incident(
-            db,
-            incident_text
+            db=db,
+            text=incident_text
         )
 
 

@@ -11,8 +11,9 @@ from fastapi import (
 from sqlalchemy.orm import Session
 
 from database import get_db
+from fastapi.responses import PlainTextResponse
 
-from rejesha_green.services.permit_service import permit_service
+from rejesha_green.services.permit_service import handle_ussd
 
 
 router = APIRouter(
@@ -58,7 +59,10 @@ def check_ussd_rate_limit(
 
 
 
-@router.post("")
+@router.post(
+    "",
+    response_class=PlainTextResponse,
+)
 async def handle_ussd_request(
     sessionId: str = Form(...),
     serviceCode: str = Form(...),
@@ -66,8 +70,9 @@ async def handle_ussd_request(
     phoneNumber: str = Depends(check_ussd_rate_limit),
     db: Session = Depends(get_db),
 ):
-
-    return permit_service.handle_ussd_request(
+    # CHANGED:
+    # All USSD navigation is now handled by one service.
+    return handle_ussd(
         db=db,
         session_id=sessionId,
         phone_number=phoneNumber,

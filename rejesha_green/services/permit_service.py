@@ -1,4 +1,3 @@
-
 import logging
 from datetime import datetime, timezone
 from uuid import UUID
@@ -20,6 +19,9 @@ from rejesha_green.schemas.permits import (
 )
 
 from rejesha_green.services import permit_payment_service
+
+
+logger = logging.getLogger(__name__)
 
 
 logger = logging.getLogger(__name__)

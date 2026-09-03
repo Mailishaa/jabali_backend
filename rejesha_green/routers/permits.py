@@ -1,15 +1,14 @@
 from typing import List
 from uuid import UUID
 
+
 from fastapi import (
     APIRouter,
     Depends,
-    Form,
-    Request,
     Response,
     status,
 )
-from fastapi.responses import PlainTextResponse
+
 from sqlalchemy.orm import Session
 
 from database import get_db

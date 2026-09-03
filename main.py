@@ -28,6 +28,7 @@ from rejesha_green.routers import incidents
 from rejesha_green.routers.ussd import router as ussd_router
 from rejesha_green.routers import permit_payments
 
+
 from rejesha_green.security import hash_password
 
 

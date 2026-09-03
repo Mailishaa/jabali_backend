@@ -1,8 +1,8 @@
 """initial database schema
 
-Revision ID: 049496d52f0a
+Revision ID: e834ad838c39
 Revises: 
-Create Date: 2026-08-25 13:53:49.641397
+Create Date: 2026-09-02 21:58:22.211457
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '049496d52f0a'
+revision: str = 'e834ad838c39'
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -33,15 +33,6 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('community_forest_association_id')
     )
     op.create_index(op.f('ix_community_forest_associations_community_forest_association_name'), 'community_forest_associations', ['community_forest_association_name'], unique=True)
-    op.create_table('forest_zones',
-    sa.Column('zone_id', sa.UUID(), nullable=False),
-    sa.Column('cfa_name', sa.String(length=100), nullable=False),
-    sa.Column('block_name', sa.String(length=100), nullable=False),
-    sa.Column('resource_type', sa.String(length=100), nullable=False),
-    sa.Column('is_available', sa.Boolean(), nullable=False),
-    sa.Column('resource_price', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.PrimaryKeyConstraint('zone_id')
-    )
     op.create_table('tree_survival_logs',
     sa.Column('log_id', sa.UUID(), nullable=False),
     sa.Column('activity_id', sa.UUID(), nullable=False),
@@ -77,12 +68,43 @@ def upgrade() -> None:
     op.create_index(op.f('ix_users_membership_number'), 'users', ['membership_number'], unique=True)
     op.create_index(op.f('ix_users_national_id'), 'users', ['national_id'], unique=True)
     op.create_index(op.f('ix_users_phone'), 'users', ['phone'], unique=True)
+    op.create_table('forest_zones',
+    sa.Column('zone_id', sa.UUID(), nullable=False),
+    sa.Column('community_forest_association_id', sa.UUID(), nullable=False),
+    sa.Column('block_name', sa.String(length=100), nullable=False),
+    sa.Column('resource_type', sa.String(length=100), nullable=False),
+    sa.Column('is_available', sa.Boolean(), nullable=False),
+    sa.Column('price', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.ForeignKeyConstraint(['community_forest_association_id'], ['community_forest_associations.community_forest_association_id'], ),
+    sa.PrimaryKeyConstraint('zone_id')
+    )
+    op.create_index(op.f('ix_forest_zones_community_forest_association_id'), 'forest_zones', ['community_forest_association_id'], unique=False)
+    op.create_table('registration_payments',
+    sa.Column('payment_id', sa.UUID(), nullable=False),
+    sa.Column('member_id', sa.UUID(), nullable=False),
+    sa.Column('community_forest_association_id', sa.UUID(), nullable=False),
+    sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('phone', sa.String(length=20), nullable=False),
+    sa.Column('checkout_request_id', sa.String(length=100), nullable=True),
+    sa.Column('merchant_request_id', sa.String(length=100), nullable=True),
+    sa.Column('mpesa_receipt', sa.String(length=100), nullable=True),
+    sa.Column('status', sa.Enum('pending', 'paid', 'failed', name='payment_status'), nullable=False),
+    sa.Column('created_at', sa.DateTime(), nullable=False),
+    sa.Column('paid_at', sa.DateTime(), nullable=True),
+    sa.ForeignKeyConstraint(['community_forest_association_id'], ['community_forest_associations.community_forest_association_id'], ),
+    sa.ForeignKeyConstraint(['member_id'], ['users.user_id'], ),
+    sa.PrimaryKeyConstraint('payment_id')
+    )
+    op.create_index(op.f('ix_registration_payments_checkout_request_id'), 'registration_payments', ['checkout_request_id'], unique=True)
+    op.create_index(op.f('ix_registration_payments_community_forest_association_id'), 'registration_payments', ['community_forest_association_id'], unique=False)
+    op.create_index(op.f('ix_registration_payments_member_id'), 'registration_payments', ['member_id'], unique=False)
+    op.create_index(op.f('ix_registration_payments_mpesa_receipt'), 'registration_payments', ['mpesa_receipt'], unique=False)
     op.create_table('activities',
     sa.Column('activity_id', sa.String(length=36), nullable=False),
     sa.Column('created_by', sa.UUID(), nullable=False),
     sa.Column('zone_id', sa.UUID(), nullable=False),
     sa.Column('activity_name', sa.String(length=100), nullable=False),
-    sa.Column('scheduled_date', sa.Date(), nullable=False),
+    sa.Column('scheduled_date', sa.DateTime(timezone=True), nullable=False),
     sa.Column('description', sa.Text(), nullable=True),
     sa.Column('user_group', sa.Enum('TREE_PLANTING', 'TREE_NURSERY', 'FOREST_CLEANING', 'FOREST_PATROL', 'FIRE_PREVENTION', 'FIRE_FIGHTING', 'FOREST_RESTORATION', 'INVASIVE_SPECIES_CONTROL', 'WATER_SOURCE_PROTECTION', 'WILDLIFE_MONITORING', 'BIODIVERSITY_MONITORING', 'ECO_TOURISM', 'ENVIRONMENTAL_EDUCATION', 'COMMUNITY_AWARENESS', 'TRAINING_WORKSHOP', 'NURSERY_MAINTENANCE', 'TREE_MAINTENANCE', 'AGROFORESTRY', 'SUSTAINABLE_HARVESTING', 'BEEKEEPING', 'CONFLICT_RESOLUTION', 'FOREST_BOUNDARY_MAPPING', 'ILLEGAL_ACTIVITY_REPORTING', 'FOREST_INVENTORY', 'COMMUNITY_MEETING', name='usergroup'), nullable=True),
     sa.Column('expected_attendees', sa.Integer(), nullable=False),
@@ -120,16 +142,21 @@ def upgrade() -> None:
     sa.Column('payment_created_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('payment_completed_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('ussd_session_id', sa.String(length=100), nullable=False),
+    sa.Column('forest_zone_id', sa.UUID(), nullable=False),
+    sa.Column('resource_price_at_purchase', sa.Numeric(precision=10, scale=2), nullable=False),
+    sa.Column('expiry_date', sa.DateTime(timezone=True), nullable=True),
     sa.Column('current_step', sa.String(length=50), nullable=False),
     sa.Column('session_data', sa.String(length=2000), nullable=True),
     sa.Column('session_created_at', sa.DateTime(timezone=True), server_default=sa.text('now()'), nullable=False),
     sa.Column('session_updated_at', sa.DateTime(timezone=True), nullable=True),
     sa.Column('deleted_at', sa.DateTime(timezone=True), nullable=True),
+    sa.ForeignKeyConstraint(['forest_zone_id'], ['forest_zones.zone_id'], ),
     sa.ForeignKeyConstraint(['member_id'], ['users.user_id'], ),
     sa.PrimaryKeyConstraint('permit_id')
     )
     op.create_index(op.f('ix_permits_checkout_request_id'), 'permits', ['checkout_request_id'], unique=True)
     op.create_index(op.f('ix_permits_deleted_at'), 'permits', ['deleted_at'], unique=False)
+    op.create_index(op.f('ix_permits_forest_zone_id'), 'permits', ['forest_zone_id'], unique=False)
     op.create_index(op.f('ix_permits_member_id'), 'permits', ['member_id'], unique=False)
     op.create_index(op.f('ix_permits_merchant_request_id'), 'permits', ['merchant_request_id'], unique=False)
     op.create_index(op.f('ix_permits_mpesa_receipt_number'), 'permits', ['mpesa_receipt_number'], unique=True)
@@ -139,37 +166,12 @@ def upgrade() -> None:
     op.create_index(op.f('ix_permits_permit_status'), 'permits', ['permit_status'], unique=False)
     op.create_index(op.f('ix_permits_phone_number'), 'permits', ['phone_number'], unique=False)
     op.create_index(op.f('ix_permits_ussd_session_id'), 'permits', ['ussd_session_id'], unique=True)
-    op.create_table('registration_payments',
-    sa.Column('payment_id', sa.UUID(), nullable=False),
-    sa.Column('member_id', sa.UUID(), nullable=False),
-    sa.Column('community_forest_association_id', sa.UUID(), nullable=False),
-    sa.Column('amount', sa.Numeric(precision=10, scale=2), nullable=False),
-    sa.Column('phone', sa.String(length=20), nullable=False),
-    sa.Column('checkout_request_id', sa.String(length=100), nullable=True),
-    sa.Column('merchant_request_id', sa.String(length=100), nullable=True),
-    sa.Column('mpesa_receipt', sa.String(length=100), nullable=True),
-    sa.Column('status', sa.Enum('pending', 'paid', 'failed', name='payment_status'), nullable=False),
-    sa.Column('created_at', sa.DateTime(), nullable=False),
-    sa.Column('paid_at', sa.DateTime(), nullable=True),
-    sa.ForeignKeyConstraint(['community_forest_association_id'], ['community_forest_associations.community_forest_association_id'], ),
-    sa.ForeignKeyConstraint(['member_id'], ['users.user_id'], ),
-    sa.PrimaryKeyConstraint('payment_id')
-    )
-    op.create_index(op.f('ix_registration_payments_checkout_request_id'), 'registration_payments', ['checkout_request_id'], unique=True)
-    op.create_index(op.f('ix_registration_payments_community_forest_association_id'), 'registration_payments', ['community_forest_association_id'], unique=False)
-    op.create_index(op.f('ix_registration_payments_member_id'), 'registration_payments', ['member_id'], unique=False)
-    op.create_index(op.f('ix_registration_payments_mpesa_receipt'), 'registration_payments', ['mpesa_receipt'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade() -> None:
     """Downgrade schema."""
     # ### commands auto generated by Alembic - please adjust! ###
-    op.drop_index(op.f('ix_registration_payments_mpesa_receipt'), table_name='registration_payments')
-    op.drop_index(op.f('ix_registration_payments_member_id'), table_name='registration_payments')
-    op.drop_index(op.f('ix_registration_payments_community_forest_association_id'), table_name='registration_payments')
-    op.drop_index(op.f('ix_registration_payments_checkout_request_id'), table_name='registration_payments')
-    op.drop_table('registration_payments')
     op.drop_index(op.f('ix_permits_ussd_session_id'), table_name='permits')
     op.drop_index(op.f('ix_permits_phone_number'), table_name='permits')
     op.drop_index(op.f('ix_permits_permit_status'), table_name='permits')
@@ -179,12 +181,20 @@ def downgrade() -> None:
     op.drop_index(op.f('ix_permits_mpesa_receipt_number'), table_name='permits')
     op.drop_index(op.f('ix_permits_merchant_request_id'), table_name='permits')
     op.drop_index(op.f('ix_permits_member_id'), table_name='permits')
+    op.drop_index(op.f('ix_permits_forest_zone_id'), table_name='permits')
     op.drop_index(op.f('ix_permits_deleted_at'), table_name='permits')
     op.drop_index(op.f('ix_permits_checkout_request_id'), table_name='permits')
     op.drop_table('permits')
     op.drop_index(op.f('ix_incidents_report_incident_id'), table_name='incidents_report')
     op.drop_table('incidents_report')
     op.drop_table('activities')
+    op.drop_index(op.f('ix_registration_payments_mpesa_receipt'), table_name='registration_payments')
+    op.drop_index(op.f('ix_registration_payments_member_id'), table_name='registration_payments')
+    op.drop_index(op.f('ix_registration_payments_community_forest_association_id'), table_name='registration_payments')
+    op.drop_index(op.f('ix_registration_payments_checkout_request_id'), table_name='registration_payments')
+    op.drop_table('registration_payments')
+    op.drop_index(op.f('ix_forest_zones_community_forest_association_id'), table_name='forest_zones')
+    op.drop_table('forest_zones')
     op.drop_index(op.f('ix_users_phone'), table_name='users')
     op.drop_index(op.f('ix_users_national_id'), table_name='users')
     op.drop_index(op.f('ix_users_membership_number'), table_name='users')
@@ -192,7 +202,6 @@ def downgrade() -> None:
     op.drop_table('users')
     op.drop_index(op.f('ix_tree_survival_logs_log_id'), table_name='tree_survival_logs')
     op.drop_table('tree_survival_logs')
-    op.drop_table('forest_zones')
     op.drop_index(op.f('ix_community_forest_associations_community_forest_association_name'), table_name='community_forest_associations')
     op.drop_table('community_forest_associations')
     # ### end Alembic commands ###

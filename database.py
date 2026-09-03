@@ -3,8 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 from rejesha_green.config import settings
-
-database_url = os.getenv("DATABASE_URL", settings.DATABASE_URL)
+database_url = os.getenv("DATABASE_URL") or settings.DATABASE_URL
 
 # Heroku may provide postgres:// instead of postgresql://
 if database_url.startswith("postgres://"):

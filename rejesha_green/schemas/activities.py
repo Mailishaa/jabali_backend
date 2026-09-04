@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from rejesha_green.models.activity import UserGroup
+from rejesha_green.models.activity import UserGroup, ActivityStatus
 
 
 class ActivityCreate(BaseModel):
@@ -26,6 +26,7 @@ class ActivityUpdate(BaseModel):
     user_group: Optional[UserGroup] = None
     expected_attendees: Optional[int] = Field(None, ge=0)
     actual_attendees: Optional[int] = Field(None, ge=0)
+    status:Optional[ActivityStatus]=NONE
 
 
 class ActivityResponse(BaseModel):
@@ -40,6 +41,7 @@ class ActivityResponse(BaseModel):
     user_group: Optional[UserGroup]
     expected_attendees: int
     actual_attendees: int
+    status: ActivityStatus
     created_at: datetime
 
 

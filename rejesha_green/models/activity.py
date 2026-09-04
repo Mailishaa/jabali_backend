@@ -11,6 +11,7 @@ from sqlalchemy import (
     Integer,
     String,
     Text,
+  
     
 )
 from sqlalchemy.dialects.postgresql import UUID
@@ -46,6 +47,11 @@ class UserGroup(str, enum.Enum):
     FOREST_INVENTORY = "forest_inventory"
     COMMUNITY_MEETING = "community_meeting"
 
+
+class  ActivityStatus(str , enum.Enum):
+        UPCOMING= "upcoming"
+        COMPLETED = "completed"
+        DID_NOT_HAPPEN = "did_not_happen"
 
 class Activity(Base):
     __tablename__ = "activities"
@@ -106,3 +112,10 @@ class Activity(Base):
         default=datetime.utcnow,
         nullable=False,
     )
+
+    status = Column( 
+         Enum(ActivityStatus), 
+         nullable=False, 
+         default=ActivityStatus.UPCOMING, )
+
+    

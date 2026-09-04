@@ -1,9 +1,9 @@
-from datetime import date
+from datetime import datetime
 from uuid import UUID
 
 from sqlalchemy.orm import Session
 
-from rejesha_green.models.activity import Activity
+from rejesha_green.models.activity import Activity, ActivityStatus
 
 
 class ActivityRepository:
@@ -60,7 +60,8 @@ class ActivityRepository:
     ):
         return (
             self.db.query(Activity)
-            .filter(Activity.scheduled_date >= date.today())
+            .filter(Activity.status == ActivityStatus.UPCOMING)
+            .filter(Activity.scheduled_date >= datetime.utcnow())
             .order_by(Activity.scheduled_date.asc())
             .offset(skip)
             .limit(limit)

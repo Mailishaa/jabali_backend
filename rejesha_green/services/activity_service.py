@@ -5,6 +5,7 @@ from rejesha_green.repositories.activity_repository import ActivityRepository
 from rejesha_green.schemas.activities import (
     ActivityCreate,
     ActivityUpdate,
+    ActivityStatus,
 )
 from rejesha_green.services.sms_service import SMSService
 
@@ -37,6 +38,7 @@ class ActivityService:
             user_group=activity_data.user_group,
             expected_attendees=activity_data.expected_attendees,
             actual_attendees=activity_data.actual_attendees,
+            status = ActivityStatus.UPCOMING
         )
 
         created_activity = self.repository.create(activity)

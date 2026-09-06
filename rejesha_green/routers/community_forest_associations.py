@@ -15,11 +15,11 @@ def create_cfa(data: CommunityForestAssociationCreate, db: Session = Depends(get
     return community_forest_association_service.create_community_forest_association(db, data, current_user)
 
 @router.get("/", response_model=list[CommunityForestAssociationResponse])
-def get_cfas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN))): 
+def get_cfas(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN,UserRole.KENYA_FOREST_SERVICE_OFFICIAL))): 
     return CommunityForestAssociationRepository(db).get_all(skip, limit)
 
 @router.get("/{cfa_id}", response_model=CommunityForestAssociationResponse)
-def get_cfa(cfa_id: uuid.UUID, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN))):
+def get_cfa(cfa_id: uuid.UUID, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN,UserRole.KENYA_FOREST_SERVICE_OFFICIAL))):
     cfa = CommunityForestAssociationRepository(db).get(cfa_id)
     if not cfa: raise HTTPException(404, "Community Forest Association not found")
     return cfa

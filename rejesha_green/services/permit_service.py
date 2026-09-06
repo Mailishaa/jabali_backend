@@ -243,8 +243,6 @@ def handle_ussd_request(
         )
         .all()
     )
-
-    # STEP 1: User selected Request Permit
     if parts == ["1"]: 
         if not resources: return "END No resources available." 
         response = "CON Select resource:\n" 
@@ -252,7 +250,7 @@ def handle_ussd_request(
             response += ( f"{index}. " f"{resource.resource_type} " f"Ksh {resource.resource_price}\n" ) 
         return response.rstrip()
 
-    # STEP 2: User selected a resource
+    
     if len(parts) == 2 and parts[0] == "1": 
         try: 
             resource_index = int(parts[1]) - 1 
@@ -287,7 +285,7 @@ def handle_ussd_request(
             )
     
 
-    # STEP 3: User chose Pay or Cancel
+    
     if len(parts) == 3 and parts[0] == "1":
 
         permit = permit_repository.get_by_ussd_session_id(
@@ -314,7 +312,7 @@ def handle_ussd_request(
 
         return "END Invalid payment selection."
 
-    # STEP 4: User entered M-Pesa phone number
+    
     if (
         len(parts) == 4
         and parts[0] == "1"

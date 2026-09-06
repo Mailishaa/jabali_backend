@@ -26,7 +26,7 @@ class ActivityUpdate(BaseModel):
     user_group: Optional[UserGroup] = None
     expected_attendees: Optional[int] = Field(None, ge=0)
     actual_attendees: Optional[int] = Field(None, ge=0)
-    status:Optional[ActivityStatus]=NONE
+    status:Optional[ActivityStatus]=None
 
 
 class ActivityResponse(BaseModel):

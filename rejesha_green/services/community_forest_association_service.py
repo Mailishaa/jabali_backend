@@ -32,3 +32,6 @@ def delete_community_forest_association(db: Session, cfa_id: uuid.UUID, current_
     cfa.is_active = False
     repo.update(cfa)
     return {"message": "Community Forest Association deactivated successfully"}
+def get_community_forest_associations(db: Session, skip: int = 0, limit: int = 100):
+    repo = CommunityForestAssociationRepository(db)
+    return repo.get_all(skip, limit)

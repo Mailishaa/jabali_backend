@@ -186,3 +186,27 @@ def process_registration_payment(db: Session, payload: dict):
         "message":"Registration payment failed",
         "result_code":callback.get("ResultCode")
     }
+def get_registration_payment(db: Session, member_id: uuid.UUID):
+
+    payment_repo = RegistrationPaymentRepository(db)
+
+    payment = payment_repo.get_latest_by_member(member_id)
+
+    if not payment:
+        raise HTTPException(
+            404,
+            "No registration payment found for this member"
+        )
+
+    return {
+        "payment_id": str(payment.payment_id),
+        "member_id": str(payment.member_id),
+        "amount": payment.amount,
+        "phone": payment.phone,
+        "status": payment.status.value,
+        "checkout_request_id": payment.checkout_request_id,
+        "merchant_request_id": payment.merchant_request_id,
+        "mpesa_receipt": payment.mpesa_receipt,
+        "created_at": payment.created_at,
+        "paid_at": payment.paid_at,
+    }

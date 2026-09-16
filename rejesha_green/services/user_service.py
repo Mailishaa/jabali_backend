@@ -67,7 +67,12 @@ def update_user(db: Session, user_id: uuid.UUID, data, current_user):
 
 def delete_user(db: Session, user_id: uuid.UUID):
     repo = UserRepository(db)
+
     user = repo.get_user(user_id)
-    if not user: raise HTTPException(404, "User not found")
-    user.is_active = False
-    return repo.update_user(user)
+
+    if not user:
+        raise HTTPException(404, "User not found")
+
+    repo.delete_user(user)
+
+    return {"message": "User deleted successfully"}

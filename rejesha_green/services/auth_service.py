@@ -80,7 +80,7 @@ def request_password_reset(
 
     user = repository.get_by_phone(phone)
 
-    # Don't reveal whether the phone number exists.
+   
     if not user:
         return {
             "message": "If the phone number is registered, an OTP has been sent."
@@ -101,10 +101,10 @@ def request_password_reset(
 
     # Invalidate previous OTPs for this phone number.
     previous_otps = (
-        db.query(PasswordResetOTP)
+        db.query(PasswordReset)
         .filter(
-            PasswordResetOTP.phone == phone,
-            PasswordResetOTP.used == False,
+            PasswordReset.phone == phone,
+            PasswordReset.used == False,
         )
         .all()
     )
@@ -112,7 +112,7 @@ def request_password_reset(
     for previous_otp in previous_otps:
         previous_otp.used = True
 
-    reset_otp = PasswordResetOTP(
+    reset_otp = PasswordReset(
         phone=phone,
         otp_hash=hash_otp(otp),
         expires_at=datetime.utcnow() + timedelta(minutes=5),
@@ -128,8 +128,8 @@ def request_password_reset(
         "It expires in 5 minutes. Do not share this code."
     )
 
-    sms_sent = send_sms(
-        phone=phone,
+    sms_sent = SMSService.send_sms(
+        phone_number=phone,
         message=message,
     )
 
@@ -181,13 +181,13 @@ def reset_password(
         )
 
     reset_otp = (
-        db.query(PasswordResetOTP)
+        db.query(PasswordReset)
         .filter(
-            PasswordResetOTP.phone == phone,
-            PasswordResetOTP.used == False,
+            PasswordReset.phone == phone,
+            PasswordReset.used == False,
         )
         .order_by(
-            PasswordResetOTP.created_at.desc()
+            PasswordReset.created_at.desc()
         )
         .first()
     )
@@ -238,3 +238,4 @@ def reset_password(
     return {
         "message": "Password reset successfully.",
     }
+

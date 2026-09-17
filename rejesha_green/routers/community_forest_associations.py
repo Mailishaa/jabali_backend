@@ -22,7 +22,8 @@ def get_cfas(
     current_user=Depends(
         require_role(
             UserRole.SUPER_ADMIN,
-            UserRole.KENYA_FOREST_SERVICE_OFFICIAL
+            UserRole.KENYA_FOREST_SERVICE_OFFICIAL,
+            UserRole.COMMUNITY_FOREST_ASSOCIATION_OFFICIAL
         )
     )
 ):
@@ -30,7 +31,7 @@ def get_cfas(
         db, skip, limit
     )
 @router.get("/{cfa_id}", response_model=CommunityForestAssociationResponse)
-def get_cfa(cfa_id: uuid.UUID, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN,UserRole.KENYA_FOREST_SERVICE_OFFICIAL))):
+def get_cfa(cfa_id: uuid.UUID, db: Session = Depends(get_db), current_user=Depends(require_role(UserRole.SUPER_ADMIN,UserRole.KENYA_FOREST_SERVICE_OFFICIAL,UserRole.COMMUNITY_FOREST_ASSOCIATION_OFFICIAL))):
     cfa = CommunityForestAssociationRepository(db).get(cfa_id)
     if not cfa: raise HTTPException(404, "Community Forest Association not found")
     return cfa
